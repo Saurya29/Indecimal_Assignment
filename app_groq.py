@@ -16,7 +16,6 @@ load_dotenv()
 # ----------------------------------
 st.set_page_config(
     page_title="Construction Marketplace Mini-RAG",
-    page_icon="🏗️",
     layout="wide"
 )
 
