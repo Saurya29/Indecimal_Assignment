@@ -1,6 +1,58 @@
 import streamlit as st
 from utils import load_documents, chunk_documents, create_vectorstore, load_vectorstore
 from langchain_community.llms import Ollama
+st.markdown("""
+<style>
+
+/* Force entire app to dark */
+html, body, [data-testid="stApp"] {
+    background-color: #0b0f19 !important;
+    color: #e5e7eb !important;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #020617 !important;
+}
+
+/* Text */
+h1, h2, h3, h4, h5, h6, p, span, div, label {
+    color: #e5e7eb !important;
+}
+
+/* Inputs */
+input, textarea {
+    background-color: #020617 !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+}
+
+/* Buttons */
+button {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-radius: 8px !important;
+}
+
+/* Chat cards */
+.card {
+    background: linear-gradient(145deg, #020617, #0f172a) !important;
+}
+
+/* Retrieved chunks */
+.chunk {
+    background-color: #020617 !important;
+    color: #e5e7eb !important;
+}
+
+/* Main container */
+div.block-container {
+    background-color: #0b0f19 !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 
 
 # ----------------------------------
