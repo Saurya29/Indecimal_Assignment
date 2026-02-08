@@ -1,6 +1,9 @@
-import os
-import streamlit as st
 from dotenv import load_dotenv
+import os
+
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+import streamlit as st
 
 from utils import load_documents, chunk_documents, create_vectorstore, load_vectorstore
 from langchain_groq import ChatGroq
