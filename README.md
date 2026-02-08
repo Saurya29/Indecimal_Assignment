@@ -31,7 +31,7 @@ Build a simple RAG pipeline that:
 ---
 
 ##  System Architecture
- User Query --> FAISS Vector Search --> Top-k Relevant Chunks --> Prompt + Context --> LLM (Ollama) --> Grounded Answer + Source Chunks
+ User Query --> FAISS Vector Search --> Top-k Relevant Chunks --> Prompt + Context --> LLM = Ollama(Local Inference)|Grok (Cloud via Streamlit) --> Grounded Answer + Source Chunks
 
 ## Install Ollama
 
@@ -102,5 +102,6 @@ Groq is faster, while Ollama allows fully offline usage. Both models remain grou
 - No hallucinated answers were observed.
 - Ollama produced grounded answers when context was available.
 - When information was missing, the system correctly returned:
+
 
 
