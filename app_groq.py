@@ -73,7 +73,6 @@ st.set_page_config(
     page_title="Construction Marketplace Mini-RAG",
     layout="wide"
 )
-st.set_option('theme.base', 'dark')
 
 # ----------------------------------
 # Styling
