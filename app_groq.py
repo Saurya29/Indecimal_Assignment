@@ -84,6 +84,8 @@ with col1:
 
 with col2:
     st.markdown("<div class='title'>Construction Marketplace Mini-RAG</div>", unsafe_allow_html=True)
+    st.markdown("<div class='subtitle'>An LLM-Powered Retrieval-Augmented Generation System for Intelligent Document Querying</div>", unsafe_allow_html=True)
+
 
 # ----------------------------------
 # Session State
