@@ -58,7 +58,7 @@ html, body, [data-testid="stApp"]{
     position:absolute;
     inset:0;
     background:url("logo.png") no-repeat center 40px;
-    background-size:420px;
+    background-size:120px;
     opacity:0.12;
     filter:drop-shadow(0 0 30px rgba(99,102,241,0.6));
 }
