@@ -1,160 +1,172 @@
 from dotenv import load_dotenv
 import os
-
-load_dotenv()
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 import streamlit as st
 
 from utils import load_documents, chunk_documents, create_vectorstore, load_vectorstore
 from langchain_groq import ChatGroq
+
+# ---------------------------
+# Load Env
+# ---------------------------
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
+# ---------------------------
+# Page Config
+# ---------------------------
+st.set_page_config(
+    page_title="Construction Marketplace Mini-RAG",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
+# ---------------------------
+# Global Dark Theme + Bigger Fonts
+# ---------------------------
 st.markdown("""
 <style>
 
-/* Force entire app to dark */
+/* App Background */
 html, body, [data-testid="stApp"] {
-    background-color: #0b0f19 !important;
-    color: #e5e7eb !important;
+    background-color:#0b0f19;
+    color:#e5e7eb;
+    font-size:18px;
 }
 
-/* Sidebar */
-section[data-testid="stSidebar"] {
-    background-color: #020617 !important;
+/* Headings */
+h1 {font-size:3rem !important;}
+h2 {font-size:2.2rem !important;}
+h3 {font-size:1.7rem !important;}
+p, li, span, label, input {
+    font-size:1.05rem !important;
 }
 
-/* Text elements */
-h1, h2, h3, h4, h5, h6, p, span, div, label {
-    color: #e5e7eb !important;
-}
-
-/* Input box */
-input, textarea {
-    background-color: #020617 !important;
-    color: #f8fafc !important;
-    border: 1px solid #334155 !important;
+/* Input */
+input {
+    background:#020617 !important;
+    color:white !important;
+    border:1px solid #334155 !important;
+    border-radius:10px !important;
+    padding:14px !important;
 }
 
 /* Buttons */
 button {
-    background-color: #1e293b !important;
-    color: #f8fafc !important;
-    border-radius: 8px !important;
+    background:#4f46e5 !important;
+    color:white !important;
+    border-radius:10px !important;
+    padding:10px 18px !important;
+    font-size:1rem !important;
 }
 
-/* Chat cards */
-.card {
-    background: linear-gradient(145deg, #020617, #0f172a) !important;
-}
-
-/* Retrieved chunks */
-.chunk {
-    background-color: #020617 !important;
-    color: #e5e7eb !important;
-}
-
-/* Remove Streamlit default white containers */
-div.block-container {
-    background-color: #0b0f19 !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
-load_dotenv()
-st.set_page_config(
-    page_title="Construction Marketplace Mini-RAG",
-    layout="wide"
-)
-
-
-st.markdown("""
-<style>
-
-body { background-color:#0b0f19; }
-
-.title {
-    font-size:2.6rem;
-    font-weight:800;
-    color:#f8fafc;
-}
-
-.subtitle {
-    color:#94a3b8;
-    margin-bottom:25px;
-}
-
+/* Card */
 .card {
     background:linear-gradient(145deg,#020617,#0f172a);
-    padding:20px;
-    border-radius:14px;
-    margin-bottom:14px;
-    animation:fade 0.4s ease-in-out;
-    font-size:1.05rem;
-    line-height:1.7;
+    padding:22px;
+    border-radius:16px;
+    margin-bottom:18px;
+    line-height:1.8;
+    box-shadow:0 0 12px rgba(99,102,241,0.15);
 }
 
-.user { border-left:5px solid #22c55e; }
+/* User vs Bot */
+.user {border-left:6px solid #22c55e;}
+.bot  {border-left:6px solid #6366f1;}
 
-.bot {
-    border-left:5px solid #6366f1;
-    font-size:1.15rem;
-}
-
+/* Chunk */
 .chunk {
     background:#020617;
-    padding:14px;
-    border-radius:10px;
+    padding:16px;
+    border-radius:12px;
     border:1px solid #1e293b;
-    margin-bottom:10px;
+    margin-bottom:12px;
 }
 
-@keyframes fade {
-    from {opacity:0; transform:translateY(10px);}
-    to {opacity:1; transform:translateY(0);}
+/* Pills */
+.pill {
+    display:inline-block;
+    padding:8px 14px;
+    background:#1e293b;
+    border-radius:999px;
+    margin:6px 6px 0 0;
+    font-size:0.95rem;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-col1, col2 = st.columns([1,8])
+# ---------------------------
+# Header
+# ---------------------------
+st.markdown("""
+<h1>🏗 Construction Marketplace Mini-RAG</h1>
+<p style="color:#94a3b8;">
+Ask questions about pricing, quality, delays, warranties, packages, materials, and maintenance —  
+answers come strictly from internal construction documents.
+</p>
+""", unsafe_allow_html=True)
 
-with col1:
-    st.image("logo.png", width=200)
+# ---------------------------
+# Suggested Questions
+# ---------------------------
+with st.expander("💡 What can I ask?", expanded=True):
+    st.markdown("""
+<div class="pill">What is the escrow-based payment system?</div>
+<div class="pill">How does Indecimal handle construction delays?</div>
+<div class="pill">What are the package prices per sqft?</div>
+<div class="pill">What materials are used in Premier package?</div>
+<div class="pill">How many quality checkpoints exist?</div>
+<div class="pill">What does zero-cost maintenance cover?</div>
+<div class="pill">Do you provide real-time tracking?</div>
+<div class="pill">What warranties are offered?</div>
+<div class="pill">Explain stage-based contractor payments</div>
+<div class="pill">What is included in kitchen wallet?</div>
+<div class="pill">Bathroom fittings allowance?</div>
+<div class="pill">What brands of cement are used?</div>
+""", unsafe_allow_html=True)
 
-with col2:
-    st.markdown("<div class='title'>Construction Marketplace Mini-RAG</div>", unsafe_allow_html=True)
-    st.markdown("<div class='subtitle'>An LLM-Powered Retrieval-Augmented Generation System for Intelligent Document Querying</div>", unsafe_allow_html=True)
-
-
-
+# ---------------------------
+# Session State
+# ---------------------------
 if "vectorstore" not in st.session_state:
     st.session_state.vectorstore = None
 
-
+# ---------------------------
+# Load Vector DB
+# ---------------------------
 if st.session_state.vectorstore is None:
     try:
         st.session_state.vectorstore = load_vectorstore()
     except:
-        with st.spinner("Building knowledge base from documents..."):
+        with st.spinner("Building knowledge base..."):
             docs = load_documents("data")
             chunks = chunk_documents(docs)
             create_vectorstore(chunks)
             st.session_state.vectorstore = load_vectorstore()
 
+# ---------------------------
+# LLM
+# ---------------------------
 llm = ChatGroq(
-    api_key=os.getenv("GROQ_API_KEY"),
+    api_key=GROQ_API_KEY,
     model="llama-3.1-8b-instant",
     temperature=0
 )
 
+# ---------------------------
+# Query Box
+# ---------------------------
+query = st.text_input("🔍 Ask your question")
 
-query = st.text_input("Ask about policies, pricing, quality, delays, warranties...")
-
-if query and st.session_state.vectorstore is not None:
+# ---------------------------
+# RAG Pipeline
+# ---------------------------
+if query and st.session_state.vectorstore:
 
     st.markdown(
-        f"<div class='card user'><b>You:</b> {query}</div>",
+        f"<div class='card user'><b>You:</b><br>{query}</div>",
         unsafe_allow_html=True
     )
-
 
     retrieved = st.session_state.vectorstore.similarity_search_with_score(query, k=3)
 
@@ -162,7 +174,6 @@ if query and st.session_state.vectorstore is not None:
     for i, (doc, score) in enumerate(retrieved):
         context += f"\n\n[Chunk {i+1}]\n{doc.page_content[:1200]}"
 
-  
     prompt = f"""
 You are a retrieval-augmented QA system.
 
@@ -183,18 +194,16 @@ Return format:
 ANSWER:
 - bullet point
 - bullet point
-- bullet point
 
 SOURCE_CHUNKS:
 - Chunk numbers used
 """
 
-    st.info("Generating answer strictly from retrieved document context...")
-
-    response = llm.invoke(prompt).content
+    with st.spinner("Generating answer..."):
+        response = llm.invoke(prompt).content
 
     if "NOT FOUND IN DOCUMENTS" in response:
-        st.error("Answer not present in provided documents.")
+        st.error("Answer not present in documents.")
         st.stop()
 
     st.markdown(
@@ -202,7 +211,9 @@ SOURCE_CHUNKS:
         unsafe_allow_html=True
     )
 
-
+    # ---------------------------
+    # Retrieved Context
+    # ---------------------------
     st.subheader("📚 Retrieved Context")
 
     for i, (doc, score) in enumerate(retrieved):
@@ -211,5 +222,11 @@ SOURCE_CHUNKS:
             unsafe_allow_html=True
         )
 
+# ---------------------------
+# Footer
+# ---------------------------
 st.markdown("---")
-st.markdown("Mini-RAG | FAISS + Sentence-Transformers + Groq LLM")
+st.markdown(
+"Mini-RAG System | FAISS • Sentence-Transformers • Groq LLM",
+unsafe_allow_html=True
+)
