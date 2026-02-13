@@ -89,7 +89,7 @@ Groq is faster, while Ollama allows fully offline usage. Both models remain grou
 | Metric | Result |
 |------|-------|
 | Questions Tested | 12 |
-| Relevant Retrieval | 11 / 12 |
+| Relevant Retrieval | 10 / 12 |
 | Hallucinations Observed | 0 |
 | Complete Answers | 10 / 12 |
 | Partial Answers | 2 / 12 |
@@ -102,6 +102,7 @@ Groq is faster, while Ollama allows fully offline usage. Both models remain grou
 - No hallucinated answers were observed.
 - Ollama produced grounded answers when context was available.
 - When information was missing, the system correctly returned:
+
 
 
 
