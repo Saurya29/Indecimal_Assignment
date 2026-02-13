@@ -15,101 +15,107 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 # -----------------------
 st.set_page_config(
     page_title="Construction Intelligence AI",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 # -----------------------
-# Ultra Modern CSS
+# STABLE MODERN CSS
 # -----------------------
 st.markdown("""
 <style>
 
-/* ===== GLOBAL ===== */
+/* ---------------- BASE ---------------- */
 html, body, [data-testid="stApp"]{
 background:#020617;
 color:#e5e7eb;
 font-family: 'Segoe UI', sans-serif;
 }
 
-/* ===== 3D HERO BACKGROUND ===== */
-.hero {
-background:
-radial-gradient(circle at top left, #4f46e5 0%, transparent 40%),
-radial-gradient(circle at bottom right, #22c55e 0%, transparent 40%),
-url("https://images.unsplash.com/photo-1503387762-592deb58ef4e");
-background-size:cover;
-padding:80px 60px;
-border-radius:30px;
-margin-bottom:40px;
-box-shadow:0 0 80px rgba(99,102,241,0.6);
-animation:fadeUp 1s ease;
+/* Background watermark logo */
+[data-testid="stApp"]::before{
+content:"";
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:700px;
+height:700px;
+background:url("logo.png") no-repeat center;
+background-size:contain;
+opacity:0.05;
+z-index:-1;
 }
 
-/* ===== TITLES ===== */
-.hero h1{
-font-size:4rem;
-font-weight:900;
-background:linear-gradient(90deg,#a5b4fc,#22c55e);
--webkit-background-clip:text;
-color:transparent;
+/* ---------------- TYPOGRAPHY ---------------- */
+h1{font-size:3rem !important;}
+h2{font-size:2.1rem !important;}
+h3{font-size:1.6rem !important;}
+p, span, label, li, div{
+font-size:1.05rem !important;
+line-height:1.7;
 }
 
-.hero p{
-font-size:1.3rem;
-color:#c7d2fe;
-max-width:800px;
-}
-
-/* ===== INPUT ===== */
+/* ---------------- INPUT ---------------- */
 input{
 background:#020617!important;
-border-radius:14px!important;
-padding:18px!important;
+color:white!important;
 font-size:1.1rem!important;
-border:1px solid #4f46e5!important;
+padding:16px!important;
+border-radius:12px!important;
+border:1px solid #6366f1!important;
 }
 
-/* ===== CARDS ===== */
+/* ---------------- BUTTON ---------------- */
+button{
+background:#4f46e5!important;
+color:white!important;
+font-size:1rem!important;
+border-radius:12px!important;
+padding:10px 20px!important;
+}
+
+/* ---------------- CARDS ---------------- */
 .card{
-background:rgba(2,6,23,0.7);
-backdrop-filter:blur(18px);
-padding:26px;
-border-radius:20px;
+background:rgba(2,6,23,0.75);
+backdrop-filter:blur(12px);
+padding:24px;
+border-radius:18px;
 margin-bottom:18px;
-animation:fadeUp .6s ease;
-box-shadow:0 0 20px rgba(99,102,241,0.25);
+box-shadow:0 0 25px rgba(99,102,241,0.25);
+animation:fadeUp .4s ease;
 }
 
 .user{border-left:6px solid #22c55e;}
 .bot{border-left:6px solid #6366f1;}
 
 .card:hover{
-transform:scale(1.02);
-transition:0.3s;
+transform:scale(1.01);
+transition:.25s;
 }
 
-/* ===== PILLS ===== */
+/* ---------------- PILLS ---------------- */
 .pill{
 display:inline-block;
-padding:10px 18px;
+padding:8px 14px;
 border-radius:999px;
 background:#1e293b;
 margin:6px;
-box-shadow:0 0 12px rgba(79,70,229,0.4);
+font-size:0.95rem!important;
 }
 
-/* ===== CHUNKS ===== */
+/* ---------------- CHUNKS ---------------- */
 .chunk{
 background:#020617;
-border-radius:16px;
-padding:20px;
-margin-bottom:14px;
+padding:18px;
+border-radius:14px;
 border:1px solid #1e293b;
+margin-bottom:12px;
 }
 
-/* ===== ANIMATIONS ===== */
+/* ---------------- ANIMATION ---------------- */
 @keyframes fadeUp{
-from{opacity:0;transform:translateY(30px);}
+from{opacity:0;transform:translateY(20px);}
 to{opacity:1;transform:translateY(0);}
 }
 
@@ -117,17 +123,18 @@ to{opacity:1;transform:translateY(0);}
 """, unsafe_allow_html=True)
 
 # -----------------------
-# HERO SECTION
+# HEADER
 # -----------------------
-st.markdown("""
-<div class="hero">
-<h1>🏗 Construction Intelligence AI</h1>
-<p>
-AI-powered assistant for construction pricing, quality systems,
-materials, warranties, delays, and maintenance using verified internal documents.
-</p>
-</div>
-""", unsafe_allow_html=True)
+col1,col2=st.columns([1,6])
+
+with col1:
+    st.image("logo.png", width=120)
+
+with col2:
+    st.markdown("""
+    <h1>Construction Intelligence AI</h1>
+    <p>Ask verified questions about pricing, quality, delays, warranties and materials.</p>
+    """, unsafe_allow_html=True)
 
 # -----------------------
 # SUGGESTED PROMPTS
@@ -135,17 +142,17 @@ materials, warranties, delays, and maintenance using verified internal documents
 with st.expander("✨ Suggested Questions", expanded=True):
     st.markdown("""
 <div class="pill">What are the package prices per sqft?</div>
-<div class="pill">Explain escrow based payments</div>
-<div class="pill">How does Indecimal ensure quality?</div>
+<div class="pill">Explain escrow based payment system</div>
+<div class="pill">How many quality checkpoints exist?</div>
+<div class="pill">How are construction delays handled?</div>
 <div class="pill">What materials are used in Premier package?</div>
-<div class="pill">What does zero cost maintenance cover?</div>
-<div class="pill">How are delays handled?</div>
+<div class="pill">What does zero cost maintenance include?</div>
 <div class="pill">Do you provide real time tracking?</div>
-<div class="pill">What warranty is offered?</div>
+<div class="pill">What warranty is provided?</div>
 """, unsafe_allow_html=True)
 
 # -----------------------
-# VECTOR DB
+# VECTORSTORE
 # -----------------------
 if "vectorstore" not in st.session_state:
     st.session_state.vectorstore=None
@@ -172,14 +179,17 @@ llm=ChatGroq(
 # -----------------------
 # INPUT
 # -----------------------
-query=st.text_input("Ask anything about construction policies, pricing or quality")
+query=st.text_input("🔍 Ask your question")
 
 # -----------------------
-# RAG FLOW
+# RAG PIPELINE
 # -----------------------
 if query and st.session_state.vectorstore:
 
-    st.markdown(f"<div class='card user'><b>You</b><br>{query}</div>",unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='card user'><b>You</b><br>{query}</div>",
+        unsafe_allow_html=True
+    )
 
     retrieved=st.session_state.vectorstore.similarity_search_with_score(query,k=3)
 
@@ -188,11 +198,11 @@ if query and st.session_state.vectorstore:
         context+=f"\n\n[Chunk {i+1}]\n{doc.page_content[:1200]}"
 
     prompt=f"""
-You are a strict retrieval QA system.
+You are a retrieval-augmented QA system.
 
-Use only CONTEXT.
-If answer missing say:
-NOT FOUND IN DOCUMENTS.
+Rules:
+1. Use ONLY context
+2. If missing say NOT FOUND IN DOCUMENTS
 
 CONTEXT:
 {context}
@@ -208,23 +218,26 @@ SOURCE_CHUNKS:
 - numbers
 """
 
-    with st.spinner("Thinking..."):
+    with st.spinner("Generating answer..."):
         response=llm.invoke(prompt).content
 
     if "NOT FOUND" in response:
-        st.error("Not found in documents.")
+        st.error("Answer not found in documents.")
         st.stop()
 
-    st.markdown(f"<div class='card bot'><b>Assistant</b><br>{response}</div>",unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='card bot'><b>Assistant</b><br>{response}</div>",
+        unsafe_allow_html=True
+    )
 
-    st.subheader("📚 Source Context")
+    st.subheader("📚 Retrieved Context")
 
     for i,(doc,score) in enumerate(retrieved):
         st.markdown(
-        f"<div class='chunk'><b>Chunk {i+1}</b><br>{doc.page_content}</div>",
-        unsafe_allow_html=True
+            f"<div class='chunk'><b>Chunk {i+1}</b><br>{doc.page_content}</div>",
+            unsafe_allow_html=True
         )
 
 st.markdown("---")
-st.markdown("⚡ Powered by FAISS • Sentence Transformers • Groq LLM")
+st.markdown("Mini-RAG | FAISS • Sentence Transformers • Groq")
 
