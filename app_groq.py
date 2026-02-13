@@ -24,18 +24,6 @@ st.set_page_config(
 # -----------------------
 st.markdown("""
 <style>
-.hero {
-background:
-radial-gradient(circle at top left, #4f46e5 0%, transparent 40%),
-radial-gradient(circle at bottom right, #22c55e 0%, transparent 40%),
-url("https://images.unsplash.com/photo-1503387762-592deb58ef4e");
-background-size:cover;
-padding:80px 60px;
-border-radius:30px;
-margin-bottom:40px;
-box-shadow:0 0 80px rgba(99,102,241,0.6);
-animation:fadeUp 1s ease;
-}
 
 /* ---------------- BASE ---------------- */
 html, body, [data-testid="stApp"]{
