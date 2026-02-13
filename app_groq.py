@@ -57,13 +57,13 @@ html, body, [data-testid="stApp"]{
     position:absolute;
     inset:0;
     background:url("logo.png") no-repeat center 25px;
-    background-size:100px;  /* SMALLER */
+    background-size:50px;  /* SMALLER */
     opacity:0.14;
 }
 
 /* TITLE */
 .logo-hero h1{
-    margin-top:190px;     /* MOVED UP */
+    margin-top:90px;     /* MOVED UP */
     font-size:3.1rem !important;
     font-weight:900;
     background:linear-gradient(90deg,#a5b4fc,#22c55e);
