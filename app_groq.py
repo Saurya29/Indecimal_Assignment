@@ -30,14 +30,15 @@ html, body, [data-testid="stApp"]{
     background:#020617;
     color:#e5e7eb;
     font-family: 'Segoe UI', sans-serif;
+    font-size:20px;   /* GLOBAL SCALE UP */
 }
 
 /* ================= HERO ================= */
 .logo-hero{
     position:relative;
-    padding:40px 40px 80px 40px;
-    border-radius:30px;
-    margin-bottom:50px;
+    padding:90px 40px 55px 40px;   /* REDUCED */
+    border-radius:26px;
+    margin-bottom:40px;
     text-align:center;
 
     background:
@@ -46,10 +47,8 @@ html, body, [data-testid="stApp"]{
     linear-gradient(145deg,#020617,#0b1225);
 
     box-shadow:
-    0 0 90px rgba(99,102,241,0.55),
-    inset 0 0 40px rgba(34,197,94,0.18);
-
-    overflow:hidden;
+    0 0 60px rgba(99,102,241,0.45),
+    inset 0 0 30px rgba(34,197,94,0.15);
 }
 
 /* BIG LOGO */
@@ -57,22 +56,15 @@ html, body, [data-testid="stApp"]{
     content:"";
     position:absolute;
     inset:0;
-    background:url("logo.png") no-repeat center 40px;
-    background-size:120px;
-    opacity:0.12;
-    filter:drop-shadow(0 0 30px rgba(99,102,241,0.6));
-}
-
-/* TEXT CONTAINER */
-.logo-hero-content{
-    position:relative;
-    z-index:2;
+    background:url("logo.png") no-repeat center 25px;
+    background-size:300px;  /* SMALLER */
+    opacity:0.14;
 }
 
 /* TITLE */
 .logo-hero h1{
-    margin-top:320px;
-    font-size:3.4rem !important;
+    margin-top:190px;     /* MOVED UP */
+    font-size:3.1rem !important;
     font-weight:900;
     background:linear-gradient(90deg,#a5b4fc,#22c55e);
     -webkit-background-clip:text;
@@ -81,71 +73,55 @@ html, body, [data-testid="stApp"]{
 
 /* SUBTITLE */
 .logo-hero p{
-    font-size:1.2rem !important;
-    margin-top:15px;
+    font-size:1.35rem !important;
+    margin-top:12px;
     color:#c7d2fe;
-    max-width:900px;
-    margin-left:auto;
-    margin-right:auto;
 }
 
 /* ================= INPUT ================= */
 input{
     background:#020617 !important;
     color:white !important;
-    font-size:1.15rem !important;
+    font-size:1.25rem !important;
     padding:18px !important;
     border-radius:14px !important;
     border:1px solid #6366f1 !important;
 }
 
-/* ================= BUTTON ================= */
-button{
-    background:#4f46e5 !important;
-    color:white !important;
-    font-size:1rem !important;
-    border-radius:12px !important;
-    padding:10px 20px !important;
-}
-
 /* ================= CARDS ================= */
 .card{
     background:rgba(2,6,23,0.75);
-    backdrop-filter:blur(12px);
     padding:28px;
     border-radius:20px;
     margin-bottom:22px;
-    box-shadow:0 0 25px rgba(99,102,241,0.25);
+    box-shadow:0 0 20px rgba(99,102,241,0.25);
 }
 
-.user{
-    border-left:6px solid #22c55e;
-}
-
-.bot{
-    border-left:6px solid #6366f1;
+.card b{
+    font-size:1.3rem;
 }
 
 /* ================= CHUNKS ================= */
 .chunk{
     background:#020617;
-    padding:20px;
+    padding:22px;
     border-radius:16px;
     border:1px solid #1e293b;
     margin-bottom:14px;
-    font-size:1rem;
-    line-height:1.6;
+    font-size:1.1rem;
+    line-height:1.7;
 }
 
-/* ================= SUGGESTION PILLS ================= */
+/* ================= PILLS ================= */
 .pill{
     display:inline-block;
-    padding:8px 16px;
+    padding:10px 18px;
     border-radius:999px;
     background:#1e293b;
     margin:6px;
-    font-size:0.95rem;
+    font-size:1.05rem;
 }
+
 
 </style>
 """, unsafe_allow_html=True)
