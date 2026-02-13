@@ -1,14 +1,10 @@
 import os
-
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
 
-# -----------------------------
-# Load Markdown Documents
-# -----------------------------
 def load_documents(folder_path="data"):
     documents = []
 
@@ -23,9 +19,6 @@ def load_documents(folder_path="data"):
     return documents
 
 
-# -----------------------------
-# Chunk Documents
-# -----------------------------
 def chunk_documents(documents):
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=500,
@@ -34,9 +27,6 @@ def chunk_documents(documents):
     return splitter.split_documents(documents)
 
 
-# -----------------------------
-# Create FAISS Index
-# -----------------------------
 def create_vectorstore(chunks):
     if len(chunks) == 0:
         raise ValueError("No documents found inside data folder.")
@@ -51,9 +41,6 @@ def create_vectorstore(chunks):
     return vectorstore
 
 
-# -----------------------------
-# Load FAISS Index
-# -----------------------------
 def load_vectorstore():
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
