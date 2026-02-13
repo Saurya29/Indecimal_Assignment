@@ -1,187 +1,198 @@
 from dotenv import load_dotenv
 import os
 import streamlit as st
-
 from utils import load_documents, chunk_documents, create_vectorstore, load_vectorstore
 from langchain_groq import ChatGroq
 
-# ---------------------------
-# Load Env
-# ---------------------------
+# -----------------------
+# Load ENV
+# -----------------------
 load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# ---------------------------
+# -----------------------
 # Page Config
-# ---------------------------
+# -----------------------
 st.set_page_config(
-    page_title="Construction Marketplace Mini-RAG",
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    page_title="Construction Intelligence AI",
+    layout="wide"
 )
 
-# ---------------------------
-# Global Dark Theme + Bigger Fonts
-# ---------------------------
+# -----------------------
+# Ultra Modern CSS
+# -----------------------
 st.markdown("""
 <style>
 
-/* App Background */
-html, body, [data-testid="stApp"] {
-    background-color:#0b0f19;
-    color:#e5e7eb;
-    font-size:18px;
+/* ===== GLOBAL ===== */
+html, body, [data-testid="stApp"]{
+background:#020617;
+color:#e5e7eb;
+font-family: 'Segoe UI', sans-serif;
 }
 
-/* Headings */
-h1 {font-size:3rem !important;}
-h2 {font-size:2.2rem !important;}
-h3 {font-size:1.7rem !important;}
-p, li, span, label, input {
-    font-size:1.05rem !important;
+/* ===== 3D HERO BACKGROUND ===== */
+.hero {
+background:
+radial-gradient(circle at top left, #4f46e5 0%, transparent 40%),
+radial-gradient(circle at bottom right, #22c55e 0%, transparent 40%),
+url("https://images.unsplash.com/photo-1503387762-592deb58ef4e");
+background-size:cover;
+padding:80px 60px;
+border-radius:30px;
+margin-bottom:40px;
+box-shadow:0 0 80px rgba(99,102,241,0.6);
+animation:fadeUp 1s ease;
 }
 
-/* Input */
-input {
-    background:#020617 !important;
-    color:white !important;
-    border:1px solid #334155 !important;
-    border-radius:10px !important;
-    padding:14px !important;
+/* ===== TITLES ===== */
+.hero h1{
+font-size:4rem;
+font-weight:900;
+background:linear-gradient(90deg,#a5b4fc,#22c55e);
+-webkit-background-clip:text;
+color:transparent;
 }
 
-/* Buttons */
-button {
-    background:#4f46e5 !important;
-    color:white !important;
-    border-radius:10px !important;
-    padding:10px 18px !important;
-    font-size:1rem !important;
+.hero p{
+font-size:1.3rem;
+color:#c7d2fe;
+max-width:800px;
 }
 
-/* Card */
-.card {
-    background:linear-gradient(145deg,#020617,#0f172a);
-    padding:22px;
-    border-radius:16px;
-    margin-bottom:18px;
-    line-height:1.8;
-    box-shadow:0 0 12px rgba(99,102,241,0.15);
+/* ===== INPUT ===== */
+input{
+background:#020617!important;
+border-radius:14px!important;
+padding:18px!important;
+font-size:1.1rem!important;
+border:1px solid #4f46e5!important;
 }
 
-/* User vs Bot */
-.user {border-left:6px solid #22c55e;}
-.bot  {border-left:6px solid #6366f1;}
-
-/* Chunk */
-.chunk {
-    background:#020617;
-    padding:16px;
-    border-radius:12px;
-    border:1px solid #1e293b;
-    margin-bottom:12px;
+/* ===== CARDS ===== */
+.card{
+background:rgba(2,6,23,0.7);
+backdrop-filter:blur(18px);
+padding:26px;
+border-radius:20px;
+margin-bottom:18px;
+animation:fadeUp .6s ease;
+box-shadow:0 0 20px rgba(99,102,241,0.25);
 }
 
-/* Pills */
-.pill {
-    display:inline-block;
-    padding:8px 14px;
-    background:#1e293b;
-    border-radius:999px;
-    margin:6px 6px 0 0;
-    font-size:0.95rem;
+.user{border-left:6px solid #22c55e;}
+.bot{border-left:6px solid #6366f1;}
+
+.card:hover{
+transform:scale(1.02);
+transition:0.3s;
+}
+
+/* ===== PILLS ===== */
+.pill{
+display:inline-block;
+padding:10px 18px;
+border-radius:999px;
+background:#1e293b;
+margin:6px;
+box-shadow:0 0 12px rgba(79,70,229,0.4);
+}
+
+/* ===== CHUNKS ===== */
+.chunk{
+background:#020617;
+border-radius:16px;
+padding:20px;
+margin-bottom:14px;
+border:1px solid #1e293b;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(30px);}
+to{opacity:1;transform:translateY(0);}
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------------------
-# Header
-# ---------------------------
+# -----------------------
+# HERO SECTION
+# -----------------------
 st.markdown("""
-<h1>🏗 Construction Marketplace Mini-RAG</h1>
-<p style="color:#94a3b8;">
-Ask questions about pricing, quality, delays, warranties, packages, materials, and maintenance —  
-answers come strictly from internal construction documents.
+<div class="hero">
+<h1>🏗 Construction Intelligence AI</h1>
+<p>
+AI-powered assistant for construction pricing, quality systems,
+materials, warranties, delays, and maintenance using verified internal documents.
 </p>
+</div>
 """, unsafe_allow_html=True)
 
-# ---------------------------
-# Suggested Questions
-# ---------------------------
-with st.expander("💡 What can I ask?", expanded=True):
+# -----------------------
+# SUGGESTED PROMPTS
+# -----------------------
+with st.expander("✨ Suggested Questions", expanded=True):
     st.markdown("""
-<div class="pill">What is the escrow-based payment system?</div>
-<div class="pill">How does Indecimal handle construction delays?</div>
 <div class="pill">What are the package prices per sqft?</div>
+<div class="pill">Explain escrow based payments</div>
+<div class="pill">How does Indecimal ensure quality?</div>
 <div class="pill">What materials are used in Premier package?</div>
-<div class="pill">How many quality checkpoints exist?</div>
-<div class="pill">What does zero-cost maintenance cover?</div>
-<div class="pill">Do you provide real-time tracking?</div>
-<div class="pill">What warranties are offered?</div>
-<div class="pill">Explain stage-based contractor payments</div>
-<div class="pill">What is included in kitchen wallet?</div>
-<div class="pill">Bathroom fittings allowance?</div>
-<div class="pill">What brands of cement are used?</div>
+<div class="pill">What does zero cost maintenance cover?</div>
+<div class="pill">How are delays handled?</div>
+<div class="pill">Do you provide real time tracking?</div>
+<div class="pill">What warranty is offered?</div>
 """, unsafe_allow_html=True)
 
-# ---------------------------
-# Session State
-# ---------------------------
+# -----------------------
+# VECTOR DB
+# -----------------------
 if "vectorstore" not in st.session_state:
-    st.session_state.vectorstore = None
+    st.session_state.vectorstore=None
 
-# ---------------------------
-# Load Vector DB
-# ---------------------------
 if st.session_state.vectorstore is None:
     try:
-        st.session_state.vectorstore = load_vectorstore()
+        st.session_state.vectorstore=load_vectorstore()
     except:
-        with st.spinner("Building knowledge base..."):
-            docs = load_documents("data")
-            chunks = chunk_documents(docs)
+        with st.spinner("Indexing documents..."):
+            docs=load_documents("data")
+            chunks=chunk_documents(docs)
             create_vectorstore(chunks)
-            st.session_state.vectorstore = load_vectorstore()
+            st.session_state.vectorstore=load_vectorstore()
 
-# ---------------------------
+# -----------------------
 # LLM
-# ---------------------------
-llm = ChatGroq(
+# -----------------------
+llm=ChatGroq(
     api_key=GROQ_API_KEY,
     model="llama-3.1-8b-instant",
     temperature=0
 )
 
-# ---------------------------
-# Query Box
-# ---------------------------
-query = st.text_input("🔍 Ask your question")
+# -----------------------
+# INPUT
+# -----------------------
+query=st.text_input("Ask anything about construction policies, pricing or quality")
 
-# ---------------------------
-# RAG Pipeline
-# ---------------------------
+# -----------------------
+# RAG FLOW
+# -----------------------
 if query and st.session_state.vectorstore:
 
-    st.markdown(
-        f"<div class='card user'><b>You:</b><br>{query}</div>",
-        unsafe_allow_html=True
-    )
+    st.markdown(f"<div class='card user'><b>You</b><br>{query}</div>",unsafe_allow_html=True)
 
-    retrieved = st.session_state.vectorstore.similarity_search_with_score(query, k=3)
+    retrieved=st.session_state.vectorstore.similarity_search_with_score(query,k=3)
 
-    context = ""
-    for i, (doc, score) in enumerate(retrieved):
-        context += f"\n\n[Chunk {i+1}]\n{doc.page_content[:1200]}"
+    context=""
+    for i,(doc,score) in enumerate(retrieved):
+        context+=f"\n\n[Chunk {i+1}]\n{doc.page_content[:1200]}"
 
-    prompt = f"""
-You are a retrieval-augmented QA system.
+    prompt=f"""
+You are a strict retrieval QA system.
 
-Rules:
-1. Use ONLY the context below.
-2. Do NOT use outside knowledge.
-3. If answer not present, reply exactly:
-NOT FOUND IN DOCUMENTS
+Use only CONTEXT.
+If answer missing say:
+NOT FOUND IN DOCUMENTS.
 
 CONTEXT:
 {context}
@@ -189,44 +200,31 @@ CONTEXT:
 QUESTION:
 {query}
 
-Return format:
-
 ANSWER:
-- bullet point
-- bullet point
+- bullet
+- bullet
 
 SOURCE_CHUNKS:
-- Chunk numbers used
+- numbers
 """
 
-    with st.spinner("Generating answer..."):
-        response = llm.invoke(prompt).content
+    with st.spinner("Thinking..."):
+        response=llm.invoke(prompt).content
 
-    if "NOT FOUND IN DOCUMENTS" in response:
-        st.error("Answer not present in documents.")
+    if "NOT FOUND" in response:
+        st.error("Not found in documents.")
         st.stop()
 
-    st.markdown(
-        f"<div class='card bot'><b>Assistant:</b><br>{response}</div>",
-        unsafe_allow_html=True
-    )
+    st.markdown(f"<div class='card bot'><b>Assistant</b><br>{response}</div>",unsafe_allow_html=True)
 
-    # ---------------------------
-    # Retrieved Context
-    # ---------------------------
-    st.subheader("📚 Retrieved Context")
+    st.subheader("📚 Source Context")
 
-    for i, (doc, score) in enumerate(retrieved):
+    for i,(doc,score) in enumerate(retrieved):
         st.markdown(
-            f"<div class='chunk'><b>Chunk {i+1} | Similarity: {round(score,4)}</b><br>{doc.page_content}</div>",
-            unsafe_allow_html=True
+        f"<div class='chunk'><b>Chunk {i+1}</b><br>{doc.page_content}</div>",
+        unsafe_allow_html=True
         )
 
-# ---------------------------
-# Footer
-# ---------------------------
 st.markdown("---")
-st.markdown(
-"Mini-RAG System | FAISS • Sentence-Transformers • Groq LLM",
-unsafe_allow_html=True
-)
+st.markdown("⚡ Powered by FAISS • Sentence Transformers • Groq LLM")
+
