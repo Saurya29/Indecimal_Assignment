@@ -143,7 +143,7 @@ with col1:
 
 with col2:
     st.markdown("""
-    <h1>Construction Intelligence AI</h1>
+    <h1 class="main-title">Construction Intelligence AI</h1>
     <p>Ask verified questions about pricing, quality, delays, warranties and materials.</p>
     """, unsafe_allow_html=True)
 
