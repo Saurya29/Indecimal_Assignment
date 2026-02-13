@@ -35,6 +35,13 @@ color:#e5e7eb;
 font-family:'Segoe UI',sans-serif;
 }
 
+.main-title{
+    font-size:4.2rem !important;   /* Increase here */
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+
 /* Watermark logo */
 [data-testid="stApp"]::before{
 content:"";
