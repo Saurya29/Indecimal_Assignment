@@ -69,30 +69,26 @@ Groq is faster, while Ollama allows fully offline usage. Both models remain grou
 ## 🔍 QUALITY ANALYSIS
 
 ### Evaluation Questions
-1. What services does Indecimal provide?
-2. What makes Indecimal different from competitors?
-3. How does Indecimal ensure construction quality?
-4. What factors affect construction project delays?
-5. Does Indecimal provide warranties?
-6. What is included in the premium package?
-7. How does Indecimal track project progress?
-8. What happens if construction deviates from plan?
-9. Does Indecimal support custom designs?
-10. How can customers communicate with project managers?
-11. What payment methods are accepted?
-12. What is covered under standard packages?
+1."What are the package prices per sqft?",
+2."Explain escrow based payment system",
+3."How many quality checkpoints exist?",
+4."How are construction delays handled?",
+5."What materials are used in Premier package?",
+6."What does zero cost maintenance include?",
+7."Do you provide real time tracking?",
+8."What warranty is provided?"
 
 ---
 
 ### Evaluation Results
 
 | Metric | Result |
-|------|-------|
-| Questions Tested | 12 |
-| Relevant Retrieval | 10 / 12 |
+|------|--------|
+| Questions Tested | 8 |
+| Correctly Answered from Documents | 6 / 8 |
+| Questions Not Found in Documents | 2 / 8 |
 | Hallucinations Observed | 0 |
-| Complete Answers | 10 / 12 |
-| Partial Answers | 2 / 12 |
+| Complete Answers | 6 / 8 |
 
 ---
 
@@ -102,6 +98,7 @@ Groq is faster, while Ollama allows fully offline usage. Both models remain grou
 - No hallucinated answers were observed.
 - Ollama produced grounded answers when context was available.
 - When information was missing, the system correctly returned:
+
 
 
 
