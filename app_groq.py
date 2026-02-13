@@ -58,25 +58,13 @@ div.block-container {
 
 </style>
 """, unsafe_allow_html=True)
-
-
-
-# ----------------------------------
-# Load ENV
-# ----------------------------------
 load_dotenv()
-
-# ----------------------------------
-# Page Config
-# ----------------------------------
 st.set_page_config(
     page_title="Construction Marketplace Mini-RAG",
     layout="wide"
 )
 
-# ----------------------------------
-# Styling
-# ----------------------------------
+
 st.markdown("""
 <style>
 
@@ -126,9 +114,6 @@ body { background-color:#0b0f19; }
 </style>
 """, unsafe_allow_html=True)
 
-# ----------------------------------
-# Header with Logo
-# ----------------------------------
 col1, col2 = st.columns([1,8])
 
 with col1:
@@ -139,15 +124,11 @@ with col2:
     st.markdown("<div class='subtitle'>An LLM-Powered Retrieval-Augmented Generation System for Intelligent Document Querying</div>", unsafe_allow_html=True)
 
 
-# ----------------------------------
-# Session State
-# ----------------------------------
+
 if "vectorstore" not in st.session_state:
     st.session_state.vectorstore = None
 
-# ----------------------------------
-# Auto Build / Load Vector Store
-# ----------------------------------
+
 if st.session_state.vectorstore is None:
     try:
         st.session_state.vectorstore = load_vectorstore()
@@ -158,18 +139,13 @@ if st.session_state.vectorstore is None:
             create_vectorstore(chunks)
             st.session_state.vectorstore = load_vectorstore()
 
-# ----------------------------------
-# Groq LLM
-# ----------------------------------
 llm = ChatGroq(
     api_key=os.getenv("GROQ_API_KEY"),
     model="llama-3.1-8b-instant",
     temperature=0
 )
 
-# ----------------------------------
-# User Input
-# ----------------------------------
+
 query = st.text_input("Ask about policies, pricing, quality, delays, warranties...")
 
 if query and st.session_state.vectorstore is not None:
@@ -179,18 +155,14 @@ if query and st.session_state.vectorstore is not None:
         unsafe_allow_html=True
     )
 
-    # ----------------------------------
-    # Retrieval
-    # ----------------------------------
+
     retrieved = st.session_state.vectorstore.similarity_search_with_score(query, k=3)
 
     context = ""
     for i, (doc, score) in enumerate(retrieved):
         context += f"\n\n[Chunk {i+1}]\n{doc.page_content[:1200]}"
 
-    # ----------------------------------
-    # STRICT RAG PROMPT
-    # ----------------------------------
+  
     prompt = f"""
 You are a retrieval-augmented QA system.
 
@@ -217,8 +189,7 @@ SOURCE_CHUNKS:
 - Chunk numbers used
 """
 
-    # Grounding indicator
-    st.info("🛡️ Generating answer strictly from retrieved document context...")
+    st.info("Generating answer strictly from retrieved document context...")
 
     response = llm.invoke(prompt).content
 
@@ -231,9 +202,7 @@ SOURCE_CHUNKS:
         unsafe_allow_html=True
     )
 
-    # ----------------------------------
-    # Transparency
-    # ----------------------------------
+
     st.subheader("📚 Retrieved Context")
 
     for i, (doc, score) in enumerate(retrieved):
@@ -242,8 +211,5 @@ SOURCE_CHUNKS:
             unsafe_allow_html=True
         )
 
-# ----------------------------------
-# Footer
-# ----------------------------------
 st.markdown("---")
 st.markdown("Mini-RAG | FAISS + Sentence-Transformers + Groq LLM")
