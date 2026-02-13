@@ -36,7 +36,7 @@ html, body, [data-testid="stApp"]{
 /* ================= HERO ================= */
 .logo-hero{
     position:relative;
-    padding:90px 40px 55px 40px;   /* REDUCED */
+    padding:40px 20px 25px 20px;   /* REDUCED */
     border-radius:26px;
     margin-bottom:40px;
     text-align:center;
@@ -57,7 +57,7 @@ html, body, [data-testid="stApp"]{
     position:absolute;
     inset:0;
     background:url("logo.png") no-repeat center 25px;
-    background-size:300px;  /* SMALLER */
+    background-size:100px;  /* SMALLER */
     opacity:0.14;
 }
 
